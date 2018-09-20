@@ -24,21 +24,15 @@ ekos.login(username, password)
 
 # fgoh download and rename
 fgohTime = ekos.download_report(fgoh)
-fgohTime = rename.dtround(fgohTime)
-fgohTime = rename.tzconv(fgohTime)
-rename.rename_file(fgohTime, 'fgoh.csv', PATH)
+rename.rename_file('fgoh.csv', PATH)
 
 # Invoices download and rename
 invTime = ekos.download_report(inv)
-invTime = rename.dtround(invTime)
-invTime = rename.tzconv(invTime)
-rename.rename_file(invTime, 'invoices.csv', PATH)
+rename.rename_file('invoices.csv', PATH)
 
 # Sales Orders download and rename
 soTime = ekos.download_report(so)
-soTime = rename.dtround(soTime)
-soTime = rename.tzconv(soTime)
-rename.rename_file(soTime, 'salesorders.csv', PATH)
+rename.rename_file('salesorders.csv', PATH)
 
 # Reformat Data
 reformat.fgoh_reformat(PATH)
