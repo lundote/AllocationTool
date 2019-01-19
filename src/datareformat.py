@@ -66,6 +66,11 @@ class DataReformat:
 		# Rename Delivery Due Date Column to Delivery Date
 		sodf = sodf.rename(index=str, columns={'Delivery Due Date':
 			                                   'Delivery Date'})
+		# Update Product column from item name
+		product = []
+		for i in range(0, len(sorders['Item'])):
+		    product.append(sorders['Item'].iloc[i][:sorders['Item'].iloc[i].find(' (')]) 
+		sorders['Product'] = product
 
 		# Merge sodof with invdf
 		ordersdf = invdf.append(sodf, ignore_index=True)
