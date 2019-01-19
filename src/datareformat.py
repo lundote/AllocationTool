@@ -70,7 +70,7 @@ class DataReformat:
 		product = []
 		for i in range(0, len(sodf['Item'])):
 		    product.append(sodf['Item'].iloc[i][:sodf['Item'].iloc[i].find(' (')]) 
-		sorders['Product'] = product
+		sodf['Product'] = product
 
 		# Merge sodof with invdf
 		ordersdf = invdf.append(sodf, ignore_index=True)
