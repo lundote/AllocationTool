@@ -68,8 +68,8 @@ class DataReformat:
 			                                   'Delivery Date'})
 		# Update Product column from item name
 		product = []
-		for i in range(0, len(sorders['Item'])):
-		    product.append(sorders['Item'].iloc[i][:sorders['Item'].iloc[i].find(' (')]) 
+		for i in range(0, len(sodf['Item'])):
+		    product.append(sodf['Item'].iloc[i][:sodf['Item'].iloc[i].find(' (')]) 
 		sorders['Product'] = product
 
 		# Merge sodof with invdf
