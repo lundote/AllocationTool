@@ -131,7 +131,7 @@ class EkosSelenium:
 
 	def quit(self):
 		'''quits webdriver'''
-		EkosSelenium.browser.close()
+		EkosSelenium.browser.quit()
 		return
 
 
