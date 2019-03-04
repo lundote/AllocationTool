@@ -20,25 +20,28 @@ so = 'Google Sheets - Sales Orders Product and Items'
 
 # def main(username=username, password=password, PATH=PATH, 
 # 	     fgoh=fgoh, inv=inv, so=so):
-ekos.login(username, password)
+try:
+	ekos.login(username, password)
 
-# fgoh download and rename
-fgohTime = ekos.download_report(fgoh)
-rename.rename_file('fgoh.csv', PATH)
+	# fgoh download and rename
+	fgohTime = ekos.download_report(fgoh)
+	rename.rename_file('fgoh.csv', PATH)
 
-# Invoices download and rename
-invTime = ekos.download_report(inv)
-rename.rename_file('invoices.csv', PATH)
+	# Invoices download and rename
+	invTime = ekos.download_report(inv)
+	rename.rename_file('invoices.csv', PATH)
 
-# Sales Orders download and rename
-soTime = ekos.download_report(so)
-rename.rename_file('salesorders.csv', PATH)
+	# Sales Orders download and rename
+	soTime = ekos.download_report(so)
+	rename.rename_file('salesorders.csv', PATH)
 
-# Reformat Data
-reformat.fgoh_reformat(PATH)
-reformat.orders_reformat(PATH)
+	# Reformat Data
+	reformat.fgoh_reformat(PATH)
+	reformat.orders_reformat(PATH)
 
-# Import Data into Google Sheets
-api.import_data(PATH)
+	# Import Data into Google Sheets
+	api.import_data(PATH)
 
-ekos.quit()
+	ekos.quit()
+except:
+	ekos.quit()
