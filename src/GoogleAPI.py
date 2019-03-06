@@ -72,7 +72,7 @@ class GoogleAPI:
 
         # Populate Google Sheets with csv data
         # Orders - sheet is named Invoices/SaiesOrders
-        orderBody = {u'range': u'Invoices/SalesOrders!A1:H1500', 
+        orderBody = {u'range': u'Invoices/SalesOrders!A1:H5000', 
                      u'values': ordersData, u'majorDimension': u'ROWS'}
         # clear sheet first to ensure no extra rows from last import
         result = service.spreadsheets().values().clear(spreadsheetId=spreadsheetID, 
@@ -84,7 +84,7 @@ class GoogleAPI:
                                                         valueInputOption='USER_ENTERED', 
                                                         body=orderBody).execute()
         # FGOH - sheet is named FGOH
-        fgohBody = {u'range': u'FGOH!A1:F1500', u'values': fgohData, 
+        fgohBody = {u'range': u'FGOH!A1:F5000', u'values': fgohData, 
                     u'majorDimension': u'ROWS'}
         # clear sheet first to ensure no extra rows from last import
         result = service.spreadsheets().values().clear(spreadsheetId=spreadsheetID, 
