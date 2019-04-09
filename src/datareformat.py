@@ -32,46 +32,23 @@ class DataReformat:
 		print("Reformating and merging %s and %s" % (invfile, sofile))
 		# clean and reformat invoices.csv
 		invdf = pd.read_csv(PATH + invfile)
-		# create list of product names from Item column
-		product = []
-		for i in range(0, len(invdf['Item'])):
-			product.append(invdf['Item'].iloc[i][:invdf['Item'].iloc[i].find(' (')])
-		# create list of order type to be added to df
-		orderType = []
-		for i in range(0, len(invdf['Item'])):
-			orderType.append('Invoice')
-		# convert product list and orderType list to pandas Series
-		product = pd.Series(data=product)
-		orderType = pd.Series(data=orderType)
-		# add product and orderType series to df
-		invdf = invdf.assign(Product=product)
-		invdf = invdf.assign(OrderType=orderType)
-		# remove packaging type from df - redundent
-		invdf = invdf.drop(['Packaging Type'], axis=1)
-		#reorder columns in invdf
+		# create Product column from Item colum
+		invdf['Product'] = [i[:i.find(' (')] for i in invdf.Item]
+		# create OrderType column
+		invdf['OrderType'] = 'Invoice'
+		#reorder columns in invdf - removes unwanted columns
 		columnOrder = ['Company','Salesperson','Product','Item',
 		               'Quantity','Delivery Date','OrderType']
 		invdf = invdf.reindex(columns=columnOrder)
-
 		# Clean Sales Order data in prep for merging with invdf
 		sodf = pd.read_csv(PATH + sofile)
 		# Create list of orderType to be added to df
-		orderType = []
-		for i in range(0, len(sodf)):
-			orderType.append('Sales Order')
-		# Convert orderType list to Pandas Series
-		orderType = pd.Series(data=orderType)
-		# Add orderType to sodf
-		sodf = sodf.assign(OrderType=orderType)
+		sodf['OrderType'] = 'Sales Order'
 		# Rename Delivery Due Date Column to Delivery Date
 		sodf = sodf.rename(index=str, columns={'Delivery Due Date':
 			                                   'Delivery Date'})
 		# Update Product column from item name
-		product = []
-		for i in range(0, len(sodf['Item'])):
-		    product.append(sodf['Item'].iloc[i][:sodf['Item'].iloc[i].find(' (')]) 
-		sodf['Product'] = product
-
+		sodf['Product'] = [i.[:i.find(' (')] for i in sodf.Item]
 		# Merge sodof with invdf
 		ordersdf = invdf.append(sodf, ignore_index=True)
 		# Write ordersdf to csv
