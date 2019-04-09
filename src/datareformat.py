@@ -48,7 +48,7 @@ class DataReformat:
 		sodf = sodf.rename(index=str, columns={'Delivery Due Date':
 			                                   'Delivery Date'})
 		# Update Product column from item name
-		sodf['Product'] = [i.[:i.find(' (')] for i in sodf.Item]
+		sodf['Product'] = [i[:i.find(' (')] for i in sodf.Item]
 		# Merge sodof with invdf
 		ordersdf = invdf.append(sodf, ignore_index=True)
 		# Write ordersdf to csv
