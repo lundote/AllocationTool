@@ -2,6 +2,20 @@ from src import EkosSelenium
 from src import renamefile
 from src import datareformat
 from src import GoogleAPI
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+# Create file handler
+fh = logging.FileHandler('AllocationTool/allocationtool.log') # PATH to file on local machine
+fh.setLevel(logging.INFO)
+# Create formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# Add formatter to fh
+fh.setFormatter(formatter)
+# Add fh to logger
+logger.addHandler(fh)
 
 # Initialize classes
 ekos = EkosSelenium.EkosSelenium()
@@ -43,5 +57,6 @@ try:
 	api.import_data(PATH)
 
 	ekos.quit()
-except:
+except Exception as e:
+	logger.error(e, exc_info=True)
 	ekos.quit()

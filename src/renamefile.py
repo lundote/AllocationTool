@@ -3,6 +3,20 @@ from pytz import timezone
 import os
 import re
 import sys
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+# Create file handler
+fh = logging.FileHandler('AllocationTool/allocationtool.log') # PATH to file on local machine
+fh.setLevel(logging.INFO)
+# Create formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# Add formatter to fh
+fh.setFormatter(formatter)
+# Add fh to logger
+logger.addHandler(fh)
 
 class RenameFile:
 	'''Class for renaming files downloaded from Ekos in preperation for
@@ -12,7 +26,7 @@ class RenameFile:
 	def dtround(self, datetime):
 		'''Rounds seconds of datetime object up if microseconds > 500000
 		else returns datetime object'''
-		print("Rounding %s" % str(datetime))
+		logger.info("Rounding %s" % str(datetime))
 		if datetime.microsecond > 500000 and datetime.second == 59:
 			datetime = datetime.replace(minute = datetime.minute + 1, 
 				second = 0)
@@ -25,7 +39,7 @@ class RenameFile:
 		and the convents timezone to Eastern Time. Necessary because
 		Ekos export names incorporate time of download in Eastern Time.
 		DST = Daylight Savings Time'''
-		print("Adjusting Timezones")
+		logger.info("Adjusting Timezones")
 		datetime = timezone('UTC').localize(datetime)
 		datetime = datetime.astimezone(timezone('US/Eastern'))
 		return datetime
@@ -33,12 +47,12 @@ class RenameFile:
 	def rename_file(self, new_filename, PATH):
 		'''Searches for the downloaded csv file based on a regular expression
 		and replaces that filename with a filename provided '''
-		filename_regex = re.compile('Export_\d\d\d\d\d\d\d\d\d\d\d\d\d\d_\.csv')
+		filename_regex = re.compile('Export_\d{14}_\.csv')
 		for l in os.listdir(PATH):
 			if filename_regex.match(l) != None:
 				filename = filename_regex.match(l).string
+				os.rename(PATH + filename, PATH + new_filename)
 			else:
 				logger.info('No file matching regular expression')
-		os.rename(PATH + filename, PATH + new_filename)
 		return
 	

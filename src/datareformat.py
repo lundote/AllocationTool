@@ -3,9 +3,22 @@ import numpy as np
 import scipy as sp
 import pandas as pd
 from pandas import DataFrame, Series
-import matplotlib as mpl
+# import matplotlib as mpl
+import logging
 # import matplotlib.pyplot as plt
 
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+# Create file handler
+fh = logging.FileHandler('AllocationTool/allocationtool.log') # PATH to file on local machine
+fh.setLevel(logging.DEBUG)
+# Create formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# Add formatter to fh
+fh.setFormatter(formatter)
+# Add fh to logger
+logger.addHandler(fh)
 
 class DataReformat:
 	# Class for reformating exported csv files from Ekos in preperation
@@ -17,7 +30,7 @@ class DataReformat:
 		# Reformats finished goods on hand csv file in preperation
 		# for porting data into Google Sheets
 
-		print("Reformating %s" % filename)
+		logger.info("Reformating %s" % filename)
 		df = pd.read_csv(PATH + filename)
 		df = df.rename(index=str, columns={'On&#8209;Hand':'On Hand'})
 		df.to_csv(path_or_buf=PATH + 'fgohGS.csv')
@@ -29,7 +42,7 @@ class DataReformat:
 		# and merges them into one csv file in preperation for import into
 		# Google Sheets
 		
-		print("Reformating and merging %s and %s" % (invfile, sofile))
+		logger.info("Reformating and merging %s and %s" % (invfile, sofile))
 		# clean and reformat invoices.csv
 		invdf = pd.read_csv(PATH + invfile)
 		# create Product column from Item colum

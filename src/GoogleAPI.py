@@ -6,6 +6,21 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 from datetime import datetime, date
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+# Create file handler
+fh = logging.FileHandler('AllocationTool/allocationtool.log') # PATH to file on local machine
+fh.setLevel(logging.INFO)
+# Create formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# Add formatter to fh
+fh.setFormatter(formatter)
+# Add fh to logger
+logger.addHandler(fh)
+
 
 class GoogleAPI:
     # argparse only relevant for command line - throws error in jupyter
@@ -49,11 +64,11 @@ class GoogleAPI:
                 credentials = tools.run_flow(flow, store, self.flags)
             else:
                 tools.run(flow, store)
-            print('Storing credentials to ' + credential_path)
+            logger.info('Storing credentials to ' + credential_path)
         return credentials
 
     def import_data(self, PATH):
-        print("Interacting w/ Google Sheets API")
+        logger.info("Interacting w/ Google Sheets API")
         # Populates Google Sheets. Dependent on Pandas
         credentials = GoogleAPI().get_credentials()
         http = credentials.authorize(httplib2.Http())

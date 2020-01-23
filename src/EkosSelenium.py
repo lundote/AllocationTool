@@ -12,12 +12,26 @@ from selenium.common.exceptions import NoSuchFrameException
 from selenium.common.exceptions import ElementClickInterceptedException
 from datetime import datetime
 import time
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+# Create file handler
+fh = logging.FileHandler('AllocationTool/allocationtool.log') # PATH to file on local machine
+fh.setLevel(logging.INFO)
+# Create formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# Add formatter to fh
+fh.setFormatter(formatter)
+# Add fh to logger
+logger.addHandler(fh)
 
 class EkosSelenium:
 	'''Class for accessing and downloading items from Ekos using 
 	Selenium Webdriver'''
 	# Firefox Settings. Need to import from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
-	gPATH = '/home/lund/downloads/geckodriver'
+	gPATH = '/PATH/TO/DRIVER'
 
 	# FIREFOX PROFILE - PREVENTS DOWNLOAD DIALOGS
 	profile = FirefoxProfile()
@@ -43,7 +57,7 @@ class EkosSelenium:
 		'''logs in to Ekos using credentials provided by user
 			handle any alerts that may occur during log in'''
 		#open webdriver, go to Ekos login page
-		print("Logging in to Ekos")
+		logger.info("Logging in to Ekos")
 		browser = EkosSelenium.browser
 		browser.get('https://login.goekos.com/default.aspx')
 		assert "Ekos" in browser.title
@@ -62,11 +76,11 @@ class EkosSelenium:
 				)
 			alert = browser.switch_to.alert()
 			alert.accept()
-			print("Alert Accepted")
+			logger.info("Alert Accepted")
 		except TimeoutException:
-			print("No Alert")
+			logger.info("No Alert")
 
-		print("Login Successful")
+		logger.info("Login Successful")
 
 		return
 
@@ -80,9 +94,9 @@ class EkosSelenium:
 				)
 			alert = browser.switch_to.alert()
 			alert.accept()
-			print("Alert Accepted")
+			logger.info("Alert Accepted")
 		except TimeoutException:
-			print("No Alert")
+			logger.info("No Alert")
 		#Get and click on Reports Tab
 		elem = WebDriverWait(browser, 10).until(
 			EC.element_to_be_clickable((By.LINK_TEXT, 'Reports'))
@@ -92,7 +106,7 @@ class EkosSelenium:
 		#Click reportname link
 		while True:
 			try:
-				print("Downloading %s as csv" % str(reportname))
+				logger.info("Downloading %s as csv" % str(reportname))
 				elem = WebDriverWait(browser, 10).until(
 					EC.element_to_be_clickable((By.LINK_TEXT, reportname))
 					)
@@ -118,9 +132,9 @@ class EkosSelenium:
 				elem = browser.find_element_by_class_name('formClose')
 				elem.click()
 			except NoSuchFrameException:
-				print('NoSuchFrameException: Restarting DL process')
+				logger.info('NoSuchFrameException: Restarting DL process')
 			except ElementClickInterceptedException:
-				print('ElementClickInterceptedException: Closing iframe')
+				logger.info('ElementClickInterceptedException: Closing iframe')
 				browser.switch_to.default_content()
 				elem = browser.find_element_by_class_name('formClose')
 				elem.click()
